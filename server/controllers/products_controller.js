@@ -1,15 +1,29 @@
-//This will be used to perform full crud in the database.
-//Make sure to import outside of module.exports, since you want it globally accessible throughout file.
+//Make sure to import it outside of module.exports to have it accessible through out file.
 const Product = require("../models/product");
 
 module.exports = {
-  //Method used to read all the products.
-  readProducts(req, res) {},
+  readAllProducts(req, res) {
+    //When using mongoose can use a callback or a use a exec method to catch and respond to errors.
+    Product.find({}).exec((err, products) => {
+      if (err) console.log("Get Product Mongoose Error------------------", err);
+      console.log("products-------------", products);
+      res.status(200).send(products);
+    });
+  },
+  readProduct(req, res) {
+    //Destruct the id from the endpoint url, to retrieve  a specific product.
+    const { id } = req.params;
+    //Copy and paste on of the product's id to the url when testing it.
+    //Use the findById to get a specific product.
+    Product.findById(id).exec((err, product) => {
+      if (err) console.log("Get Single Product Error---------------", err);
+      console.log("product--------------", product);
+      res.status(200).json({ product });
+    });
+  },
 };
 
-Product.find({}).exec((err, products) => {
-  //Always do a couple of console.logs just in case of errors.
-  if (err) console.log("Get Product Mongoose Error------------------", err);
-  //Always log the data you are returning from the database to check if you are receiving the right data.
-  console.log("products-------------", products);
-});
+
+
+
+// STEP 3C - https://medium.com/@alialhaddad/build-a-e-commerce-site-using-mern-stack-step-3c-setup-your-admin-and-products-controller-9232c08d70ab
