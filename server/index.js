@@ -2,7 +2,6 @@
 //Recommend to require it at the top of the file
 require("dotenv").config();
 
-
 //Middlewares
 //Configure body-parser so you can retrieve values from the req.body, if not the req.body will be undefined.
 const bodyParser = require("body-parser");
@@ -20,7 +19,7 @@ const cors = require('cors');
 //Set your admin functionality
 const adminController = require('./controllers/admin_controller');
 //Set your cloudinary functionality
-const cloudinaryController = require('./controllers/cloudinary_controller');
+// const cloudinaryController = require('./controllers/cloudinary_controller');
 //Set your user functionality.
 const userController = require('./controllers/user_controller');
 //Set your products functionality.
@@ -41,14 +40,17 @@ const app = express();
 const PORT = 5000;
 
 //Connect the mongoose to the database using it's connect method.
-mongoose.connect(process.env.CONNECTION_STRING,
-{ useNewUrlParser: true },
-(err) => {
-if(err) {
-console.log('Database Error----------------', err);
-}
-console.log('Connected to database');
-});
+mongoose.connect(
+  process.env.REACT_APP_CONNECTION_STRING,
+  { useNewUrlParser: true },
+  { useUnifiedTopology: true },
+  (err) => {
+    if (err) {
+      console.log("Database Error----------------", err);
+    }
+    console.log("Connected to database");
+  }
+);
 
 //Middleware 
 //For initializing the req.body. If the middleware is not used, the req.body is undefined.
@@ -57,19 +59,21 @@ app.use(bodyParser.json());
 
 
 //For storing cookies for the user.
-app.use(session({
-//Create a secret for the cookie store it in .env file
-//Secret can be anything.
-secret: process.env.SESSION_SECRET,
-//this for resaving the cookie false, if true can cause a memory leak.
-resave: false,
-//saveUnitialized best false, unless connect to a database.
-saveUninitialized: false,
-cookie: {
-//The max age of the cookie
-maxAge: 1000 * 60 * 60 * 24 * 14
-}
-}));
+app.use(
+  session({
+    //Create a secret for the cookie store it in .env file
+    //Secret can be anything.
+    secret: process.env.REACT_APP_SESSION_SECRET,
+    //this for resaving the cookie false, if true can cause a memory leak.
+    resave: false,
+    //saveUnitialized best false, unless connect to a database.
+    saveUninitialized: false,
+    cookie: {
+      //The max age of the cookie
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+    },
+  })
+);
 
 
 //Allow cross origin requests.
@@ -79,18 +83,18 @@ setTimeout(() => {
   //All our endpoints.
 
   //Read the user's session.
-  app.get("/api/user-data", userController.readUserData);
+  // app.get("/api/user-data", userController.readUserData);
   //Add a item to cart.
-  app.post("/api/user-data/cart", userController.addToCart);
+  // app.post("/api/user-data/cart", userController.addToCart);
   //Remove a item from the cart.
   // Use request parameter to remove item from cart since you are looking a specific item in cart.
-  app.delete("/api/user-data/cart/:id", userController.removeFromCart);
+  // app.delete("/api/user-data/cart/:id", userController.removeFromCart);
   //When user login
-  app.post("/api/login", userController.login);
+  // app.post("/api/login", userController.login);
   //NO NEED FOR A REGISTER SINCE YOUR ARE USING AUTH0.
   //Just need a login, since you are logging from your social media provider no need to register, only looks if a user already has a account.
   //When the user logouts
-  app.post("/api/logout", userController.logout);
+  // app.post("/api/logout", userController.logout);
 
   //PRODUCTS ENDPOINTS
   //Getting all the products
