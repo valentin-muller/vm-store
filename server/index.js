@@ -37,14 +37,13 @@ const app = express();
 
 //Define the Port your will be running your server on.
 //NOTE: Make sure the Port is the same as the proxy.
-const PORT = 5000;
+const PORT = 4000;
 
 //Connect the mongoose to the database using it's connect method.
 mongoose.connect(
   process.env.REACT_APP_CONNECTION_STRING,
-  { useNewUrlParser: true },
-  { useUnifiedTopology: true },
-  (err) => {
+  {useNewUrlParser: true, useUnifiedTopology: true},
+  function (err) {
     if (err) {
       console.log("Database Error----------------", err);
     }
@@ -117,3 +116,5 @@ setTimeout(() => {
 
 ///Then listen on the port.
 app.listen(PORT, () => console.log('Listening on Port:', PORT));
+
+
